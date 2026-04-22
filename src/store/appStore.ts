@@ -8,7 +8,7 @@ type AppState = {
   toggleSidebar: () => void
   toggleChatbot: () => void
   markAllRead: () => void
-  addNotification: (payload: Pick<NotificationItem, "title" | "detail">) => void
+  addNotification: (payload: Pick<NotificationItem, "title" | "detail" | "employeeId">) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -23,6 +23,7 @@ export const useAppStore = create<AppState>((set) => ({
       notifications: [
         {
           id: `not-${Date.now()}`,
+          employeeId: payload.employeeId,
           title: payload.title,
           detail: payload.detail,
           createdAt: new Date().toISOString(),

@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { useMemo } from "react"
 import { useLocation } from "react-router-dom"
 import { useAppStore } from "@/store/appStore"
+import { useAuthStore } from "@/store/authStore"
 
 const titles: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -24,13 +25,15 @@ const titles: Record<string, string> = {
   "/hr/policies": "Policy Center",
   "/hr/employees": "Employee Lifecycle",
   "/hr/leave-rules": "Leave Rules",
+  "/hr/quarterly-progress": "Quarterly Progress",
   "/profile": "Profile",
 }
 
 export function HeaderBar() {
   const location = useLocation()
   const { notifications, markAllRead } = useAppStore()
-  const unread = notifications.filter((item) => !item.read).length
+  const currentUser = useAuthStore((state) => state.currentUser)
+  const unread = notifications.filter((item) => !item.read && (!item.employeeId || item.employeeId === currentUser?.id)).length
   const title = useMemo(() => titles[location.pathname] ?? "Datanox", [location.pathname])
 
   return (

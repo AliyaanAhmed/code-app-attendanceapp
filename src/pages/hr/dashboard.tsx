@@ -69,6 +69,7 @@ export default function HrDashboardPage() {
           <Button asChild className="bg-[#F56B1F] hover:bg-[#df5d15]"><Link to="/hr/policies">Manage Policies</Link></Button>
           <Button asChild variant="outline"><Link to="/hr/employees">Employee Lifecycle</Link></Button>
           <Button asChild variant="outline"><Link to="/hr/leave-rules">Review Leave Rules</Link></Button>
+          <Button asChild variant="outline"><Link to="/hr/quarterly-progress">Quarterly Progress</Link></Button>
         </CardContent>
       </Card>
     </PageTransition>

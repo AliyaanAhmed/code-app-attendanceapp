@@ -16,6 +16,8 @@ import {
   Timer,
   PlaneTakeoff,
   NotebookText,
+  BellRing,
+  ChartColumnIncreasing,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import {
@@ -48,6 +50,7 @@ import { useTimesheetStore } from "@/store/timesheetStore"
 import { useAuthStore } from "@/store/authStore"
 import { useFinanceStore } from "@/store/financeStore"
 import { useHrStore } from "@/store/hrStore"
+import { useAppStore } from "@/store/appStore"
 import { mockData } from "@/data/mockData"
 import dayjs from "dayjs"
 
@@ -62,6 +65,8 @@ export default function DashboardPage() {
   const reimbursements = useFinanceStore((state) => state.reimbursements)
   const policies = useHrStore((state) => state.policies)
   const hrEmployees = useHrStore((state) => state.employees)
+  const quarterlyProgress = useHrStore((state) => state.quarterlyProgress)
+  const notifications = useAppStore((state) => state.notifications)
 
   const today = dayjs().format("YYYY-MM-DD")
 
@@ -130,6 +135,15 @@ export default function DashboardPage() {
   const payrollTotal = currentPayroll.reduce((sum, salary) => sum + salary.net, 0)
   const pendingFinanceApprovals = reimbursements.filter((claim) => claim.status === "Pending Finance Review").length
   const activeEmployees = hrEmployees.filter((employee) => employee.isActive !== false).length
+  const employeeNotifications = notifications
+    .filter((item) => !item.employeeId || item.employeeId === user.id)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, 3)
+  const latestPolicies = [...policies].sort((a, b) => b.effectiveDate.localeCompare(a.effectiveDate)).slice(0, 3)
+  const myQuarterProgress = quarterlyProgress
+    .filter((record) => record.employeeId === user.id)
+    .sort((a, b) => `${b.year}-${b.quarter}`.localeCompare(`${a.year}-${a.quarter}`))
+    .slice(0, 2)
 
   return (
     <PageTransition>
@@ -184,6 +198,48 @@ export default function DashboardPage() {
         <KpiCard title="On Leave" value={kpis.leave} icon={<CalendarClock size={24} />} />
         <KpiCard title="Late Arrivals" value={kpis.late} icon={<Clock3 size={24} />} />
         <KpiCard title="Pending Approvals" value={kpis.pendingApprovals} icon={<CircleAlert size={24} />} />
+      </div>
+
+      <div className="grid xl:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><FileText size={20} className="text-[#F56B1F]" /> Policy Updates</CardTitle></CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            {latestPolicies.map((policy) => (
+              <div key={policy.id} className="rounded-md bg-zinc-50 px-3 py-2">
+                <p className="font-medium">{policy.title}</p>
+                <p className="text-xs text-zinc-500">{policy.category} | {policy.version}</p>
+              </div>
+            ))}
+            <Button asChild size="sm" variant="outline" className="w-full"><Link to="/hr/policies">View All Policies</Link></Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><BellRing size={20} className="text-[#F56B1F]" /> Recent Notifications</CardTitle></CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            {employeeNotifications.length === 0 && <p className="text-zinc-500">No recent notifications.</p>}
+            {employeeNotifications.map((item) => (
+              <div key={item.id} className="rounded-md bg-zinc-50 px-3 py-2">
+                <p className="font-medium">{item.title}</p>
+                <p className="text-xs text-zinc-500">{item.detail}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><ChartColumnIncreasing size={20} className="text-[#F56B1F]" /> Quarterly Progress</CardTitle></CardHeader>
+          <CardContent className="space-y-2 text-sm">
+            {myQuarterProgress.length === 0 && <p className="text-zinc-500">No quarter scores published yet.</p>}
+            {myQuarterProgress.map((record) => (
+              <div key={record.id} className="rounded-md bg-zinc-50 px-3 py-2">
+                <p className="font-medium">{record.quarter} {record.year} | Overall {record.overallScore}</p>
+                <p className="text-xs text-zinc-500">Next quarter review: {record.nextQuarterDate}</p>
+              </div>
+            ))}
+            <Button asChild size="sm" variant="outline" className="w-full"><Link to="/hr/quarterly-progress">Open Progress Board</Link></Button>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid xl:grid-cols-3 gap-4">

@@ -20,6 +20,7 @@ export default function PayrollPage() {
   const addNotification = useAppStore((state) => state.addNotification)
   const [month, setMonth] = useState(dayjs().subtract(1, "month").format("YYYY-MM"))
   const [employeeId, setEmployeeId] = useState<string>("")
+  const [payslipEmployeeId, setPayslipEmployeeId] = useState<string>("")
   const [basic, setBasic] = useState(0)
   const [allowances, setAllowances] = useState(0)
   const [deductions, setDeductions] = useState(0)
@@ -32,6 +33,7 @@ export default function PayrollPage() {
   }, [salaries])
 
   const monthRows = useMemo(() => salaries.filter((salary) => salary.month === month), [month, salaries])
+  const disbursedEmployees = monthRows.filter((row) => row.status === "Disbursed")
   const monthTotal = monthRows.reduce((sum, row) => sum + row.net, 0)
   const pendingCount = monthRows.filter((row) => row.status !== "Disbursed").length
 
@@ -135,15 +137,49 @@ export default function PayrollPage() {
               className="w-full"
               onClick={() => {
                 disburseMonthSalary(month)
-                addNotification({
-                  title: "Salary credited",
-                  detail: `${dayjs(month).format("MMMM YYYY")} salary has been disbursed and payslips generated.`,
+                monthRows.forEach((row) => {
+                  addNotification({
+                    employeeId: row.employeeId,
+                    title: "Salary credited",
+                    detail: `${dayjs(month).format("MMMM YYYY")} salary has been credited. Payslip is available in your dashboard.`,
+                  })
                 })
                 toast.success("Bulk salary disbursed and payslips generated.")
               }}
             >
               Bulk Disburse Month
             </Button>
+            <div className="rounded-md border border-zinc-200 bg-zinc-50 p-3 space-y-2">
+              <p className="text-xs font-medium text-zinc-700">Send Payslip Notification</p>
+              <Select value={payslipEmployeeId} onValueChange={setPayslipEmployeeId}>
+                <SelectTrigger><SelectValue placeholder="Select employee" /></SelectTrigger>
+                <SelectContent>
+                  {disbursedEmployees.map((row) => (
+                    <SelectItem key={row.employeeId} value={row.employeeId}>
+                      {mockData.employees.find((employee) => employee.id === row.employeeId)?.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button
+                size="sm"
+                className="w-full bg-[#F56B1F] hover:bg-[#df5d15]"
+                onClick={() => {
+                  if (!payslipEmployeeId) {
+                    toast.error("Select an employee to send payslip.")
+                    return
+                  }
+                  addNotification({
+                    employeeId: payslipEmployeeId,
+                    title: "Payslip received",
+                    detail: `Your ${dayjs(month).format("MMMM YYYY")} payslip is ready to view.`,
+                  })
+                  toast.success("Payslip notification sent to employee dashboard.")
+                }}
+              >
+                Send Payslip
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>

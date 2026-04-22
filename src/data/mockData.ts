@@ -80,6 +80,7 @@ export type Holiday = {
 
 export type NotificationItem = {
   id: string
+  employeeId?: string
   title: string
   detail: string
   createdAt: string
@@ -165,6 +166,20 @@ export type LeavePolicyRule = {
   annualLimit: number
   carryForward: boolean
   minNoticeDays: number
+}
+
+export type QuarterlyProgressRecord = {
+  id: string
+  employeeId: string
+  year: number
+  quarter: "Q1" | "Q2" | "Q3" | "Q4"
+  kpiScore: number
+  collaborationScore: number
+  deliveryScore: number
+  overallScore: number
+  reviewDate: string
+  nextQuarterDate: string
+  remarks: string
 }
 
 const employees: Employee[] = [
@@ -325,11 +340,11 @@ employees.forEach((employee, empIndex) => {
 })
 
 const notifications: NotificationItem[] = [
-  { id: "not-1", title: "Timesheet reminder", detail: "Week 3 timesheet is pending submission.", createdAt: "2026-04-16T10:30:00", read: false },
-  { id: "not-2", title: "Leave approved", detail: "Your casual leave for Apr 22 is approved.", createdAt: "2026-04-14T08:10:00", read: false },
+  { id: "not-1", employeeId: "emp-005", title: "Timesheet reminder", detail: "Week 3 timesheet is pending submission.", createdAt: "2026-04-16T10:30:00", read: false },
+  { id: "not-2", employeeId: "emp-005", title: "Leave approved", detail: "Your casual leave for Apr 22 is approved.", createdAt: "2026-04-14T08:10:00", read: false },
   { id: "not-3", title: "Policy update", detail: "Attendance policy v2.1 published.", createdAt: "2026-04-11T14:00:00", read: true },
-  { id: "not-4", title: "Salary credited", detail: "March 2026 salary credited successfully.", createdAt: "2026-04-01T09:00:00", read: false },
-  { id: "not-5", title: "Payslip generated", detail: "Your March 2026 payslip is now available.", createdAt: "2026-04-01T09:05:00", read: false },
+  { id: "not-4", employeeId: "emp-005", title: "Salary credited", detail: "March 2026 salary credited successfully.", createdAt: "2026-04-01T09:00:00", read: false },
+  { id: "not-5", employeeId: "emp-005", title: "Payslip generated", detail: "Your March 2026 payslip is now available.", createdAt: "2026-04-01T09:05:00", read: false },
 ]
 
 const salaryStructures: SalaryStructure[] = employees
@@ -452,6 +467,41 @@ const leavePolicyRules: LeavePolicyRule[] = [
   { type: "Time In Lieu", annualLimit: 5, carryForward: false, minNoticeDays: 2 },
 ]
 
+const quarterlyProgressRecords: QuarterlyProgressRecord[] = employees
+  .filter((employee) => employee.role !== "Director")
+  .flatMap((employee, index) => {
+    const q1Overall = 72 + (index % 16)
+    const q2Overall = Math.min(98, q1Overall + 2 + (index % 4))
+    return [
+      {
+        id: `qpr-${employee.id}-2026-q1`,
+        employeeId: employee.id,
+        year: 2026,
+        quarter: "Q1" as const,
+        kpiScore: Math.max(60, q1Overall - 3),
+        collaborationScore: Math.max(62, q1Overall - 1),
+        deliveryScore: Math.max(58, q1Overall - 4),
+        overallScore: q1Overall,
+        reviewDate: "2026-04-10",
+        nextQuarterDate: "2026-07-05",
+        remarks: "Strong execution with room to improve documentation quality.",
+      },
+      {
+        id: `qpr-${employee.id}-2026-q2`,
+        employeeId: employee.id,
+        year: 2026,
+        quarter: "Q2" as const,
+        kpiScore: Math.max(63, q2Overall - 2),
+        collaborationScore: Math.max(65, q2Overall - 1),
+        deliveryScore: Math.max(61, q2Overall - 3),
+        overallScore: q2Overall,
+        reviewDate: "2026-07-12",
+        nextQuarterDate: "2026-10-05",
+        remarks: "Noticeable improvement in ownership and cross-team communication.",
+      },
+    ]
+  })
+
 export const loginUsers = [
   { email: "director@datanox.com", password: "director123", employeeId: "emp-001", role: "Director" as Role },
   { email: "lead@datanox.com", password: "lead123", employeeId: "emp-002", role: "Lead" as Role },
@@ -484,6 +534,7 @@ export const mockData = {
   pettyCashEntries,
   policyDocuments,
   leavePolicyRules,
+  quarterlyProgressRecords,
 }
 
 

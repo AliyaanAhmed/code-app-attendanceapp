@@ -17,6 +17,7 @@ import {
   Wallet,
   ShoppingCart,
   FileBadge2,
+  ChartColumnIncreasing,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { useAuthStore } from "@/store/authStore"
@@ -40,7 +41,7 @@ const navItems: NavItem[] = [
   { to: "/leave/request", label: "Leave", icon: ClipboardList, roles: ["Director", "Lead", "Employee", "HR Manager"] },
   { to: "/timesheet", label: "Timesheet", icon: ClipboardList, roles: ["Director", "Lead", "Employee"] },
   { to: "/calendar", label: "Calendar", icon: Calendar, roles: ["Director", "Lead", "Employee", "HR Manager"] },
-  { to: "/team", label: "Team", icon: Users2, roles: ["Director", "Lead", "HR Manager"] },
+  { to: "/team", label: "Team", icon: Users2, roles: ["Director", "Lead"] },
   { to: "/approvals", label: "Approvals", icon: ShieldCheck, roles: ["Director", "Lead"] },
   { to: "/finance", label: "Finance", icon: Banknote, roles: ["Finance Manager", "Director"] },
   { to: "/finance/payroll", label: "Payroll", icon: Banknote, roles: ["Finance Manager", "Director"] },
@@ -52,6 +53,7 @@ const navItems: NavItem[] = [
   { to: "/hr/policies", label: "Policies", icon: FileText, roles: ["Employee", "Lead", "Director", "HR Manager", "Finance Manager"] },
   { to: "/hr/employees", label: "HR Employees", icon: Users2, roles: ["HR Manager", "Director"] },
   { to: "/hr/leave-rules", label: "Leave Rules", icon: ClipboardList, roles: ["HR Manager", "Director"] },
+  { to: "/hr/quarterly-progress", label: "Quarterly Progress", icon: ChartColumnIncreasing, roles: ["Employee", "Lead", "Director", "HR Manager", "Finance Manager"] },
   { to: "/profile", label: "Profile", icon: UserCircle2, roles: ["Director", "Lead", "Employee", "Finance Manager", "HR Manager"] },
 ]
 

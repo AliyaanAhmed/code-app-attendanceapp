@@ -11,6 +11,7 @@ import { AiGuidanceCard } from "@/components/app/ai-guidance-card"
 import { useHrStore } from "@/store/hrStore"
 import type { PolicyCategory } from "@/data/mockData"
 import { useAuthStore } from "@/store/authStore"
+import { useAppStore } from "@/store/appStore"
 
 const categories: PolicyCategory[] = ["Leave", "Attendance", "Code of Conduct", "Security", "Benefits", "General"]
 
@@ -18,6 +19,7 @@ export default function HrPoliciesPage() {
   const role = useAuthStore((state) => state.role)
   const policies = useHrStore((state) => state.policies)
   const addPolicy = useHrStore((state) => state.addPolicy)
+  const addNotification = useAppStore((state) => state.addNotification)
   const [search, setSearch] = useState("")
   const [category, setCategory] = useState<PolicyCategory>("General")
   const [title, setTitle] = useState("")
@@ -37,8 +39,8 @@ export default function HrPoliciesPage() {
 
       <AiGuidanceCard text="Any new or updated policy should be clearly versioned and announced to all employees on the dashboard." />
 
-      <div className="grid xl:grid-cols-3 gap-4">
-        <Card className="xl:col-span-2">
+      <div className={canManage ? "grid xl:grid-cols-3 gap-4" : "grid gap-4"}>
+        <Card className={canManage ? "xl:col-span-2" : ""}>
           <CardHeader>
             <CardTitle>All Policies</CardTitle>
             <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search by title or category..." />
@@ -94,6 +96,10 @@ export default function HrPoliciesPage() {
                     version: "v1.0",
                     effectiveDate: new Date().toISOString().slice(0, 10),
                     updatedBy: "system",
+                  })
+                  addNotification({
+                    title: "Policy update",
+                    detail: `${title} (${category}) has been published. Please review and acknowledge.`,
                   })
                   toast.success("Policy published and notifications queued.")
                   setTitle("")

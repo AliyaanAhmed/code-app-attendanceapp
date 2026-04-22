@@ -24,6 +24,7 @@ const HrDashboardPage = lazy(() => import("@/pages/hr/dashboard"))
 const HrPoliciesPage = lazy(() => import("@/pages/hr/policies"))
 const HrEmployeesPage = lazy(() => import("@/pages/hr/employees"))
 const HrLeaveRulesPage = lazy(() => import("@/pages/hr/leave-rules"))
+const HrQuarterlyProgressPage = lazy(() => import("@/pages/hr/quarterly-progress"))
 const ProfilePage = lazy(() => import("@/pages/profile/profile"))
 const NotFoundPage = lazy(() => import("@/pages/not-found"))
 
@@ -72,11 +73,12 @@ export const router = createBrowserRouter(
               ],
             },
             {
-              element: <RoleGuard allowedRoles={["Employee", "Lead", "Director", "Finance Manager"]} />,
+              element: <RoleGuard allowedRoles={["Employee", "Lead", "Director", "Finance Manager", "HR Manager"]} />,
               children: [
                 { path: "/finance/reimbursements", element: withLoader(<ReimbursementsPage />) },
                 { path: "/finance/procurement", element: withLoader(<ProcurementPage />) },
                 { path: "/finance/payslips", element: withLoader(<PayslipsPage />) },
+                { path: "/hr/quarterly-progress", element: withLoader(<HrQuarterlyProgressPage />) },
               ],
             },
             {
