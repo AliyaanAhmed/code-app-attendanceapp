@@ -1,9 +1,11 @@
 import { useMemo } from "react"
 import { Link } from "react-router-dom"
 import {
+  Banknote,
   CalendarClock,
   CircleAlert,
   Clock3,
+  FileText,
   TrendingUp,
   UserCheck,
   ArrowUpRight,
@@ -44,6 +46,8 @@ import { useAttendanceStore } from "@/store/attendanceStore"
 import { useLeaveStore } from "@/store/leaveStore"
 import { useTimesheetStore } from "@/store/timesheetStore"
 import { useAuthStore } from "@/store/authStore"
+import { useFinanceStore } from "@/store/financeStore"
+import { useHrStore } from "@/store/hrStore"
 import { mockData } from "@/data/mockData"
 import dayjs from "dayjs"
 
@@ -54,6 +58,10 @@ export default function DashboardPage() {
   const attendanceStore = useAttendanceStore()
   const leaves = useLeaveStore((state) => state.requests)
   const weeks = useTimesheetStore((state) => state.weeks)
+  const salaries = useFinanceStore((state) => state.salaries)
+  const reimbursements = useFinanceStore((state) => state.reimbursements)
+  const policies = useHrStore((state) => state.policies)
+  const hrEmployees = useHrStore((state) => state.employees)
 
   const today = dayjs().format("YYYY-MM-DD")
 
@@ -118,12 +126,58 @@ export default function DashboardPage() {
 
   const todayStatus = attendanceStore.getTodayRecord(user.id)
   const pendingTimesheet = weeks.find((week) => week.employeeId === user.id && week.status === "Draft")
+  const currentPayroll = salaries.filter((salary) => salary.month === dayjs().subtract(1, "month").format("YYYY-MM"))
+  const payrollTotal = currentPayroll.reduce((sum, salary) => sum + salary.net, 0)
+  const pendingFinanceApprovals = reimbursements.filter((claim) => claim.status === "Pending Finance Review").length
+  const activeEmployees = hrEmployees.filter((employee) => employee.isActive !== false).length
 
   return (
     <PageTransition>
       <GreetingHeroCard name={user.name} />
 
       <AiGuidanceCard text="You are tracking strong consistency this week with healthy attendance patterns." />
+
+      {(user.role === "Finance Manager" || user.role === "HR Manager" || user.role === "Director") && (
+        <div className="grid xl:grid-cols-3 gap-4">
+          {(user.role === "Finance Manager" || user.role === "Director") && (
+            <Card className="border-[#F56B1F]/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Banknote className="text-[#F56B1F]" size={20} /> Finance Pulse</CardTitle>
+                <CardDescription>Monthly disbursement and reimbursement queue.</CardDescription>
+              </CardHeader>
+              <CardContent className="text-sm space-y-2">
+                <p className="flex justify-between"><span>Payroll (last month)</span><span className="font-semibold">PKR {payrollTotal.toLocaleString()}</span></p>
+                <p className="flex justify-between"><span>Pending reimbursement reviews</span><span className="font-semibold">{pendingFinanceApprovals}</span></p>
+                <Button asChild size="sm" className="w-full bg-[#F56B1F] hover:bg-[#df5d15]"><Link to="/finance">Open Finance Dashboard</Link></Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {(user.role === "HR Manager" || user.role === "Director") && (
+            <Card className="border-[#F56B1F]/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><FileText className="text-[#F56B1F]" size={20} /> HR Updates</CardTitle>
+                <CardDescription>Policies, people operations and leave trends.</CardDescription>
+              </CardHeader>
+              <CardContent className="text-sm space-y-2">
+                <p className="flex justify-between"><span>Active employees</span><span className="font-semibold">{activeEmployees}</span></p>
+                <p className="flex justify-between"><span>Latest policy version</span><span className="font-semibold">{policies[0]?.version ?? "-"}</span></p>
+                <Button asChild size="sm" className="w-full bg-[#F56B1F] hover:bg-[#df5d15]"><Link to="/hr">Open HR Dashboard</Link></Button>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card className="border-[#F56B1F]/20">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><CircleAlert className="text-[#F56B1F]" size={20} /> Company Alerts</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm space-y-2">
+              <p className="rounded-md bg-zinc-50 px-3 py-2">Salary and policy notifications are now role-prioritized.</p>
+              <p className="rounded-md bg-zinc-50 px-3 py-2">Pending approvals are highlighted across departments.</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard title="Present Today" value={kpis.present} icon={<UserCheck size={24} />} />

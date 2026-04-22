@@ -14,6 +14,16 @@ const TimesheetPage = lazy(() => import("@/pages/timesheet/timesheet"))
 const CalendarPage = lazy(() => import("@/pages/calendar/calendar"))
 const TeamPage = lazy(() => import("@/pages/team/team"))
 const ApprovalsPage = lazy(() => import("@/pages/approvals/approvals"))
+const FinanceDashboardPage = lazy(() => import("@/pages/finance/dashboard"))
+const PayrollPage = lazy(() => import("@/pages/finance/payroll"))
+const PayslipsPage = lazy(() => import("@/pages/finance/payslips"))
+const ReimbursementsPage = lazy(() => import("@/pages/finance/reimbursements"))
+const ProcurementPage = lazy(() => import("@/pages/finance/procurement"))
+const PettyCashPage = lazy(() => import("@/pages/finance/petty-cash"))
+const HrDashboardPage = lazy(() => import("@/pages/hr/dashboard"))
+const HrPoliciesPage = lazy(() => import("@/pages/hr/policies"))
+const HrEmployeesPage = lazy(() => import("@/pages/hr/employees"))
+const HrLeaveRulesPage = lazy(() => import("@/pages/hr/leave-rules"))
 const ProfilePage = lazy(() => import("@/pages/profile/profile"))
 const NotFoundPage = lazy(() => import("@/pages/not-found"))
 
@@ -45,11 +55,36 @@ export const router = createBrowserRouter(
             { path: "/timesheet", element: withLoader(<TimesheetPage />) },
             { path: "/calendar", element: withLoader(<CalendarPage />) },
             { path: "/profile", element: withLoader(<ProfilePage />) },
+            { path: "/hr/policies", element: withLoader(<HrPoliciesPage />) },
             {
               element: <RoleGuard allowedRoles={["Director", "Lead"]} />,
               children: [
                 { path: "/team", element: withLoader(<TeamPage />) },
                 { path: "/approvals", element: withLoader(<ApprovalsPage />) },
+              ],
+            },
+            {
+              element: <RoleGuard allowedRoles={["Director", "Finance Manager"]} />,
+              children: [
+                { path: "/finance", element: withLoader(<FinanceDashboardPage />) },
+                { path: "/finance/payroll", element: withLoader(<PayrollPage />) },
+                { path: "/finance/petty-cash", element: withLoader(<PettyCashPage />) },
+              ],
+            },
+            {
+              element: <RoleGuard allowedRoles={["Employee", "Lead", "Director", "Finance Manager"]} />,
+              children: [
+                { path: "/finance/reimbursements", element: withLoader(<ReimbursementsPage />) },
+                { path: "/finance/procurement", element: withLoader(<ProcurementPage />) },
+                { path: "/finance/payslips", element: withLoader(<PayslipsPage />) },
+              ],
+            },
+            {
+              element: <RoleGuard allowedRoles={["Director", "HR Manager"]} />,
+              children: [
+                { path: "/hr", element: withLoader(<HrDashboardPage />) },
+                { path: "/hr/employees", element: withLoader(<HrEmployeesPage />) },
+                { path: "/hr/leave-rules", element: withLoader(<HrLeaveRulesPage />) },
               ],
             },
           ],

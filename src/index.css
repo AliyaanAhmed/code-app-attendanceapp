@@ -62,4 +62,22 @@
     @apply bg-background text-foreground font-sans antialiased;
     background-image: radial-gradient(circle at 10% 10%, rgba(245, 107, 31, 0.05), transparent 40%);
   }
+
+  input:not(:disabled),
+  textarea:not(:disabled),
+  select:not(:disabled),
+  button[role="combobox"]:not(:disabled) {
+    opacity: 1;
+    background-color: #fff;
+    border-color: #d4d4d8;
+    color: #1a1a2e;
+  }
+
+  input:not(:disabled):focus,
+  textarea:not(:disabled):focus,
+  select:not(:disabled):focus,
+  button[role="combobox"]:not(:disabled):focus {
+    border-color: #f56b1f;
+    box-shadow: 0 0 0 3px rgba(245, 107, 31, 0.15);
+  }
 }

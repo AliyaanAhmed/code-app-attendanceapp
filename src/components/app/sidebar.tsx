@@ -1,16 +1,22 @@
 import type { ElementType } from "react"
 import { NavLink } from "react-router-dom"
 import {
+  Banknote,
   Calendar,
   CheckSquare,
   ClipboardList,
+  FileText,
   LayoutDashboard,
   ListChecks,
   LogOut,
+  Receipt,
   ShieldCheck,
   Users2,
   UserCircle2,
   Sparkles,
+  Wallet,
+  ShoppingCart,
+  FileBadge2,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { useAuthStore } from "@/store/authStore"
@@ -18,24 +24,35 @@ import { useAppStore } from "@/store/appStore"
 import { cn } from "@/lib/utils"
 import { initials } from "@/utils/formatters"
 import { BrandLogo } from "@/components/app/brand-logo"
+import type { Role } from "@/data/mockData"
 
 type NavItem = {
   to: string
   label: string
   icon: ElementType
-  roles: Array<"Director" | "Lead" | "Employee">
+  roles: Role[]
 }
 
 const navItems: NavItem[] = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["Director", "Lead", "Employee"] },
-  { to: "/attendance/checkin", label: "Check In", icon: CheckSquare, roles: ["Director", "Lead", "Employee"] },
-  { to: "/attendance/list", label: "Attendance", icon: ListChecks, roles: ["Director", "Lead", "Employee"] },
-  { to: "/leave/request", label: "Leave", icon: ClipboardList, roles: ["Director", "Lead", "Employee"] },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["Director", "Lead", "Employee", "Finance Manager", "HR Manager"] },
+  { to: "/attendance/checkin", label: "Check In", icon: CheckSquare, roles: ["Director", "Lead", "Employee", "HR Manager"] },
+  { to: "/attendance/list", label: "Attendance", icon: ListChecks, roles: ["Director", "Lead", "Employee", "HR Manager"] },
+  { to: "/leave/request", label: "Leave", icon: ClipboardList, roles: ["Director", "Lead", "Employee", "HR Manager"] },
   { to: "/timesheet", label: "Timesheet", icon: ClipboardList, roles: ["Director", "Lead", "Employee"] },
-  { to: "/calendar", label: "Calendar", icon: Calendar, roles: ["Director", "Lead", "Employee"] },
-  { to: "/team", label: "Team", icon: Users2, roles: ["Director", "Lead"] },
+  { to: "/calendar", label: "Calendar", icon: Calendar, roles: ["Director", "Lead", "Employee", "HR Manager"] },
+  { to: "/team", label: "Team", icon: Users2, roles: ["Director", "Lead", "HR Manager"] },
   { to: "/approvals", label: "Approvals", icon: ShieldCheck, roles: ["Director", "Lead"] },
-  { to: "/profile", label: "Profile", icon: UserCircle2, roles: ["Director", "Lead", "Employee"] },
+  { to: "/finance", label: "Finance", icon: Banknote, roles: ["Finance Manager", "Director"] },
+  { to: "/finance/payroll", label: "Payroll", icon: Banknote, roles: ["Finance Manager", "Director"] },
+  { to: "/finance/payslips", label: "Payslips", icon: FileBadge2, roles: ["Employee", "Lead", "Director", "Finance Manager"] },
+  { to: "/finance/reimbursements", label: "Reimburse", icon: Receipt, roles: ["Employee", "Lead", "Director", "Finance Manager"] },
+  { to: "/finance/procurement", label: "Procurement", icon: ShoppingCart, roles: ["Employee", "Lead", "Director", "Finance Manager"] },
+  { to: "/finance/petty-cash", label: "Petty Cash", icon: Wallet, roles: ["Finance Manager", "Director"] },
+  { to: "/hr", label: "HR", icon: FileText, roles: ["HR Manager", "Director"] },
+  { to: "/hr/policies", label: "Policies", icon: FileText, roles: ["Employee", "Lead", "Director", "HR Manager", "Finance Manager"] },
+  { to: "/hr/employees", label: "HR Employees", icon: Users2, roles: ["HR Manager", "Director"] },
+  { to: "/hr/leave-rules", label: "Leave Rules", icon: ClipboardList, roles: ["HR Manager", "Director"] },
+  { to: "/profile", label: "Profile", icon: UserCircle2, roles: ["Director", "Lead", "Employee", "Finance Manager", "HR Manager"] },
 ]
 
 export function Sidebar() {

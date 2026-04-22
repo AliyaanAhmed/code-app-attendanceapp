@@ -14,6 +14,16 @@ const titles: Record<string, string> = {
   "/calendar": "Calendar & Holidays",
   "/team": "Team Hierarchy",
   "/approvals": "Approvals",
+  "/finance": "Finance Dashboard",
+  "/finance/payroll": "Payroll Management",
+  "/finance/payslips": "Payslip Center",
+  "/finance/reimbursements": "Reimbursements",
+  "/finance/procurement": "Procurement",
+  "/finance/petty-cash": "Petty Cash",
+  "/hr": "HR Dashboard",
+  "/hr/policies": "Policy Center",
+  "/hr/employees": "Employee Lifecycle",
+  "/hr/leave-rules": "Leave Rules",
   "/profile": "Profile",
 }
 

@@ -50,6 +50,8 @@ export default function LoginPage() {
             <p><strong>Director:</strong> director@datanox.com / director123</p>
             <p><strong>Lead:</strong> lead@datanox.com / lead123</p>
             <p><strong>Employee:</strong> employee@datanox.com / employee123</p>
+            <p><strong>Finance:</strong> finance@datanox.com / finance123</p>
+            <p><strong>HR:</strong> hr@datanox.com / hr123</p>
           </div>
 
           <form className="space-y-4" onSubmit={onSubmit}>

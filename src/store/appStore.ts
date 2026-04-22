@@ -8,6 +8,7 @@ type AppState = {
   toggleSidebar: () => void
   toggleChatbot: () => void
   markAllRead: () => void
+  addNotification: (payload: Pick<NotificationItem, "title" | "detail">) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -17,4 +18,17 @@ export const useAppStore = create<AppState>((set) => ({
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   toggleChatbot: () => set((state) => ({ chatbotOpen: !state.chatbotOpen })),
   markAllRead: () => set((state) => ({ notifications: state.notifications.map((item) => ({ ...item, read: true })) })),
+  addNotification: (payload) =>
+    set((state) => ({
+      notifications: [
+        {
+          id: `not-${Date.now()}`,
+          title: payload.title,
+          detail: payload.detail,
+          createdAt: new Date().toISOString(),
+          read: false,
+        },
+        ...state.notifications,
+      ],
+    })),
 }))

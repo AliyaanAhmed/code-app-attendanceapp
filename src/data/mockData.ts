@@ -1,12 +1,13 @@
 import dayjs from "dayjs"
 
-export type Role = "Director" | "Lead" | "Employee"
+export type Role = "Director" | "Lead" | "Employee" | "Finance Manager" | "HR Manager"
 
 export type Employee = {
   id: string
   name: string
   role: Role
   department: string
+  isActive?: boolean
   teamId: string
   managerId?: string
   employeeId: string
@@ -92,25 +93,103 @@ export type Team = {
   memberIds: string[]
 }
 
+export type SalaryStructure = {
+  employeeId: string
+  month: string
+  basic: number
+  allowances: number
+  deductions: number
+  bonus: number
+  performanceBonus: number
+  net: number
+  status: "Draft" | "Disbursed"
+  disbursedOn?: string
+}
+
+export type Payslip = {
+  id: string
+  employeeId: string
+  month: string
+  generatedOn: string
+  netAmount: number
+  downloadUrl: string
+}
+
+export type ReimbursementStatus = "Pending Lead Review" | "Pending Finance Review" | "Approved" | "Rejected"
+export type ReimbursementClaim = {
+  id: string
+  employeeId: string
+  submittedOn: string
+  category: "Travel" | "Meals" | "Client Expense" | "Equipment" | "Medical" | "Other"
+  amount: number
+  billName: string
+  reason: string
+  status: ReimbursementStatus
+  leadDecisionOn?: string
+  financeDecisionOn?: string
+  rejectionReason?: string
+}
+
+export type ProcurementEntry = {
+  id: string
+  employeeId: string
+  date: string
+  item: string
+  department: string
+  amount: number
+  status: "Pending" | "Reimbursed" | "Rejected"
+}
+
+export type PettyCashEntry = {
+  id: string
+  date: string
+  type: "Credit" | "Debit"
+  amount: number
+  department?: string
+  note: string
+}
+
+export type PolicyCategory = "Leave" | "Attendance" | "Code of Conduct" | "Security" | "Benefits" | "General"
+export type PolicyDocument = {
+  id: string
+  title: string
+  category: PolicyCategory
+  version: string
+  effectiveDate: string
+  updatedBy: string
+  summary: string
+}
+
+export type LeavePolicyRule = {
+  type: LeaveType
+  annualLimit: number
+  carryForward: boolean
+  minNoticeDays: number
+}
+
 const employees: Employee[] = [
-  { id: "emp-001", name: "Ayesha Khan", role: "Director", department: "Operations", teamId: "team-ops", employeeId: "DNX-1001", contact: "+92-300-1001001", emergencyContact: "Ali Khan +92-300-0001111" },
-  { id: "emp-002", name: "Bilal Ahmed", role: "Lead", department: "Engineering", teamId: "team-eng", managerId: "emp-001", employeeId: "DNX-1002", contact: "+92-300-1001002", emergencyContact: "Sara Ahmed +92-300-0002222" },
-  { id: "emp-003", name: "Hina Tariq", role: "Lead", department: "Design", teamId: "team-design", managerId: "emp-001", employeeId: "DNX-1003", contact: "+92-300-1001003", emergencyContact: "Umar Tariq +92-300-0003333" },
-  { id: "emp-004", name: "Usman Raza", role: "Lead", department: "People", teamId: "team-people", managerId: "emp-001", employeeId: "DNX-1004", contact: "+92-300-1001004", emergencyContact: "Maha Raza +92-300-0004444" },
-  { id: "emp-005", name: "Syed Aliyaan Ahmed", role: "Employee", department: "Engineering", teamId: "team-eng", managerId: "emp-002", employeeId: "DNX-1005", contact: "+92-300-1001005", emergencyContact: "Zain Fatima +92-300-0005555" },
-  { id: "emp-006", name: "Ibrahim Saeed", role: "Employee", department: "Engineering", teamId: "team-eng", managerId: "emp-002", employeeId: "DNX-1006", contact: "+92-300-1001006", emergencyContact: "Nida Saeed +92-300-0006666" },
-  { id: "emp-007", name: "Mariam Ali", role: "Employee", department: "Engineering", teamId: "team-eng", managerId: "emp-002", employeeId: "DNX-1007", contact: "+92-300-1001007", emergencyContact: "Asad Ali +92-300-0007777" },
-  { id: "emp-008", name: "Hamza Noor", role: "Employee", department: "Design", teamId: "team-design", managerId: "emp-003", employeeId: "DNX-1008", contact: "+92-300-1001008", emergencyContact: "Sana Noor +92-300-0008888" },
-  { id: "emp-009", name: "Kiran Shah", role: "Employee", department: "Design", teamId: "team-design", managerId: "emp-003", employeeId: "DNX-1009", contact: "+92-300-1001009", emergencyContact: "Farhan Shah +92-300-0009999" },
-  { id: "emp-010", name: "Daniyal Anwar", role: "Employee", department: "Design", teamId: "team-design", managerId: "emp-003", employeeId: "DNX-1010", contact: "+92-300-1001010", emergencyContact: "Hiba Anwar +92-300-0010101" },
-  { id: "emp-011", name: "Sana Javed", role: "Employee", department: "People", teamId: "team-people", managerId: "emp-004", employeeId: "DNX-1011", contact: "+92-300-1001011", emergencyContact: "Waleed Javed +92-300-0011111" },
-  { id: "emp-012", name: "Taha Qureshi", role: "Employee", department: "People", teamId: "team-people", managerId: "emp-004", employeeId: "DNX-1012", contact: "+92-300-1001012", emergencyContact: "Areeba Qureshi +92-300-0012121" },
+  { id: "emp-001", name: "Ayesha Khan", role: "Director", department: "Operations", isActive: true, teamId: "team-ops", employeeId: "DNX-1001", contact: "+92-300-1001001", emergencyContact: "Ali Khan +92-300-0001111" },
+  { id: "emp-002", name: "Bilal Ahmed", role: "Lead", department: "Engineering", isActive: true, teamId: "team-eng", managerId: "emp-001", employeeId: "DNX-1002", contact: "+92-300-1001002", emergencyContact: "Sara Ahmed +92-300-0002222" },
+  { id: "emp-003", name: "Hina Tariq", role: "Lead", department: "Design", isActive: true, teamId: "team-design", managerId: "emp-001", employeeId: "DNX-1003", contact: "+92-300-1001003", emergencyContact: "Umar Tariq +92-300-0003333" },
+  { id: "emp-004", name: "Usman Raza", role: "Lead", department: "People", isActive: true, teamId: "team-people", managerId: "emp-001", employeeId: "DNX-1004", contact: "+92-300-1001004", emergencyContact: "Maha Raza +92-300-0004444" },
+  { id: "emp-005", name: "Syed Aliyaan Ahmed", role: "Employee", department: "Engineering", isActive: true, teamId: "team-eng", managerId: "emp-002", employeeId: "DNX-1005", contact: "+92-300-1001005", emergencyContact: "Zain Fatima +92-300-0005555" },
+  { id: "emp-006", name: "Ibrahim Saeed", role: "Employee", department: "Engineering", isActive: true, teamId: "team-eng", managerId: "emp-002", employeeId: "DNX-1006", contact: "+92-300-1001006", emergencyContact: "Nida Saeed +92-300-0006666" },
+  { id: "emp-007", name: "Mariam Ali", role: "Employee", department: "Engineering", isActive: true, teamId: "team-eng", managerId: "emp-002", employeeId: "DNX-1007", contact: "+92-300-1001007", emergencyContact: "Asad Ali +92-300-0007777" },
+  { id: "emp-008", name: "Hamza Noor", role: "Employee", department: "Design", isActive: true, teamId: "team-design", managerId: "emp-003", employeeId: "DNX-1008", contact: "+92-300-1001008", emergencyContact: "Sana Noor +92-300-0008888" },
+  { id: "emp-009", name: "Kiran Shah", role: "Employee", department: "Design", isActive: true, teamId: "team-design", managerId: "emp-003", employeeId: "DNX-1009", contact: "+92-300-1001009", emergencyContact: "Farhan Shah +92-300-0009999" },
+  { id: "emp-010", name: "Daniyal Anwar", role: "Employee", department: "Design", isActive: true, teamId: "team-design", managerId: "emp-003", employeeId: "DNX-1010", contact: "+92-300-1001010", emergencyContact: "Hiba Anwar +92-300-0010101" },
+  { id: "emp-011", name: "Sana Javed", role: "Employee", department: "People", isActive: true, teamId: "team-people", managerId: "emp-004", employeeId: "DNX-1011", contact: "+92-300-1001011", emergencyContact: "Waleed Javed +92-300-0011111" },
+  { id: "emp-012", name: "Taha Qureshi", role: "Employee", department: "People", isActive: true, teamId: "team-people", managerId: "emp-004", employeeId: "DNX-1012", contact: "+92-300-1001012", emergencyContact: "Areeba Qureshi +92-300-0012121" },
+  { id: "emp-013", name: "Ammar Siddiqui", role: "Finance Manager", department: "Finance", isActive: true, teamId: "team-finance", managerId: "emp-001", employeeId: "DNX-1013", contact: "+92-300-1001013", emergencyContact: "Maha Siddiqui +92-300-0013131" },
+  { id: "emp-014", name: "Sadia Rahman", role: "HR Manager", department: "Human Resources", isActive: true, teamId: "team-hr", managerId: "emp-001", employeeId: "DNX-1014", contact: "+92-300-1001014", emergencyContact: "Fahad Rahman +92-300-0014141" },
 ]
 
 const teams: Team[] = [
   { id: "team-eng", name: "Engineering", leadId: "emp-002", memberIds: ["emp-005", "emp-006", "emp-007"] },
   { id: "team-design", name: "Design", leadId: "emp-003", memberIds: ["emp-008", "emp-009", "emp-010"] },
   { id: "team-people", name: "People", leadId: "emp-004", memberIds: ["emp-011", "emp-012"] },
+  { id: "team-finance", name: "Finance", leadId: "emp-013", memberIds: ["emp-013"] },
+  { id: "team-hr", name: "Human Resources", leadId: "emp-014", memberIds: ["emp-014"] },
 ]
 
 const holidays2026: Holiday[] = [
@@ -249,12 +328,136 @@ const notifications: NotificationItem[] = [
   { id: "not-1", title: "Timesheet reminder", detail: "Week 3 timesheet is pending submission.", createdAt: "2026-04-16T10:30:00", read: false },
   { id: "not-2", title: "Leave approved", detail: "Your casual leave for Apr 22 is approved.", createdAt: "2026-04-14T08:10:00", read: false },
   { id: "not-3", title: "Policy update", detail: "Attendance policy v2.1 published.", createdAt: "2026-04-11T14:00:00", read: true },
+  { id: "not-4", title: "Salary credited", detail: "March 2026 salary credited successfully.", createdAt: "2026-04-01T09:00:00", read: false },
+  { id: "not-5", title: "Payslip generated", detail: "Your March 2026 payslip is now available.", createdAt: "2026-04-01T09:05:00", read: false },
+]
+
+const salaryStructures: SalaryStructure[] = employees
+  .filter((employee) => employee.role !== "Director")
+  .map((employee, index) => {
+    const basic = 90000 + index * 7500
+    const allowances = Math.round(basic * 0.3)
+    const deductions = Math.round(basic * 0.08)
+    const bonus = index % 3 === 0 ? 8000 : 0
+    const performanceBonus = index % 4 === 0 ? 6000 : 0
+    return {
+      employeeId: employee.id,
+      month: "2026-03",
+      basic,
+      allowances,
+      deductions,
+      bonus,
+      performanceBonus,
+      net: basic + allowances + bonus + performanceBonus - deductions,
+      status: "Disbursed",
+      disbursedOn: "2026-04-01",
+    }
+  })
+
+const payslips: Payslip[] = salaryStructures.map((salary) => ({
+  id: `payslip-${salary.employeeId}-${salary.month}`,
+  employeeId: salary.employeeId,
+  month: salary.month,
+  generatedOn: "2026-04-01T09:00:00",
+  netAmount: salary.net,
+  downloadUrl: "#",
+}))
+
+const reimbursementClaims: ReimbursementClaim[] = [
+  {
+    id: "reimb-001",
+    employeeId: "emp-005",
+    submittedOn: "2026-04-12",
+    category: "Travel",
+    amount: 7500,
+    billName: "uber-receipt-apr12.pdf",
+    reason: "Client meeting transportation",
+    status: "Pending Finance Review",
+    leadDecisionOn: "2026-04-13",
+  },
+  {
+    id: "reimb-002",
+    employeeId: "emp-009",
+    submittedOn: "2026-04-09",
+    category: "Equipment",
+    amount: 18200,
+    billName: "tablet-accessories.pdf",
+    reason: "Design review accessories",
+    status: "Approved",
+    leadDecisionOn: "2026-04-10",
+    financeDecisionOn: "2026-04-11",
+  },
+  {
+    id: "reimb-003",
+    employeeId: "emp-012",
+    submittedOn: "2026-04-08",
+    category: "Medical",
+    amount: 5400,
+    billName: "medical-bill.png",
+    reason: "Onsite emergency medication",
+    status: "Rejected",
+    leadDecisionOn: "2026-04-09",
+    financeDecisionOn: "2026-04-10",
+    rejectionReason: "Incomplete receipt details",
+  },
+]
+
+const procurementEntries: ProcurementEntry[] = [
+  { id: "proc-001", employeeId: "emp-006", date: "2026-04-14", item: "HDMI adapters", department: "Engineering", amount: 3200, status: "Reimbursed" },
+  { id: "proc-002", employeeId: "emp-010", date: "2026-04-11", item: "Printing material", department: "Design", amount: 1850, status: "Pending" },
+  { id: "proc-003", employeeId: "emp-011", date: "2026-04-05", item: "Welcome kits", department: "People", amount: 6900, status: "Reimbursed" },
+]
+
+const pettyCashEntries: PettyCashEntry[] = [
+  { id: "pc-001", date: "2026-04-01", type: "Credit", amount: 100000, note: "Monthly petty cash top-up" },
+  { id: "pc-002", date: "2026-04-04", type: "Debit", amount: 4500, department: "Design", note: "Urgent print material" },
+  { id: "pc-003", date: "2026-04-07", type: "Debit", amount: 2300, department: "Engineering", note: "Consumables" },
+  { id: "pc-004", date: "2026-04-15", type: "Credit", amount: 15000, note: "Mid-month refill" },
+]
+
+const policyDocuments: PolicyDocument[] = [
+  {
+    id: "pol-001",
+    title: "Attendance Compliance Policy",
+    category: "Attendance",
+    version: "v2.1",
+    effectiveDate: "2026-04-01",
+    updatedBy: "emp-014",
+    summary: "Defines check-in window, late policy, and remote attendance protocol.",
+  },
+  {
+    id: "pol-002",
+    title: "Annual Leave Policy",
+    category: "Leave",
+    version: "v1.7",
+    effectiveDate: "2026-03-10",
+    updatedBy: "emp-014",
+    summary: "Defines annual leave limits, approval matrix, and carry-forward rules.",
+  },
+  {
+    id: "pol-003",
+    title: "Workplace Code of Conduct",
+    category: "Code of Conduct",
+    version: "v1.2",
+    effectiveDate: "2026-01-15",
+    updatedBy: "emp-014",
+    summary: "Outlines expected professional behavior and grievance protocol.",
+  },
+]
+
+const leavePolicyRules: LeavePolicyRule[] = [
+  { type: "Sick Leave", annualLimit: 10, carryForward: false, minNoticeDays: 0 },
+  { type: "Casual Leave", annualLimit: 7, carryForward: false, minNoticeDays: 1 },
+  { type: "Annual Leave", annualLimit: 15, carryForward: true, minNoticeDays: 7 },
+  { type: "Time In Lieu", annualLimit: 5, carryForward: false, minNoticeDays: 2 },
 ]
 
 export const loginUsers = [
   { email: "director@datanox.com", password: "director123", employeeId: "emp-001", role: "Director" as Role },
   { email: "lead@datanox.com", password: "lead123", employeeId: "emp-002", role: "Lead" as Role },
   { email: "employee@datanox.com", password: "employee123", employeeId: "emp-005", role: "Employee" as Role },
+  { email: "finance@datanox.com", password: "finance123", employeeId: "emp-013", role: "Finance Manager" as Role },
+  { email: "hr@datanox.com", password: "hr123", employeeId: "emp-014", role: "HR Manager" as Role },
 ]
 
 export const leaveBalanceTemplate = {
@@ -274,6 +477,13 @@ export const mockData = {
   holidays2026,
   notifications,
   projectsByCategory,
+  salaryStructures,
+  payslips,
+  reimbursementClaims,
+  procurementEntries,
+  pettyCashEntries,
+  policyDocuments,
+  leavePolicyRules,
 }
 
 
