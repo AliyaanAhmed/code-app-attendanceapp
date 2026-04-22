@@ -1,5 +1,5 @@
 import { useState } from "react"
-import powerAppsLogo from "/power-apps.svg"
+import powerAppsLogo from "@/assets/power-apps.svg"
 import reactLogo from "@/assets/react.svg"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"

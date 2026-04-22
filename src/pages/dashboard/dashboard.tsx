@@ -39,6 +39,7 @@ import { PageTransition } from "@/components/app/page-transition"
 import { KpiCard } from "@/components/app/kpi-card"
 import { StatusBadge } from "@/components/app/status-badge"
 import { AiGuidanceCard } from "@/components/app/ai-guidance-card"
+import { GreetingHeroCard } from "@/components/app/greeting-hero-card"
 import { useAttendanceStore } from "@/store/attendanceStore"
 import { useLeaveStore } from "@/store/leaveStore"
 import { useTimesheetStore } from "@/store/timesheetStore"
@@ -120,13 +121,9 @@ export default function DashboardPage() {
 
   return (
     <PageTransition>
-      <div className="grid xl:grid-cols-4 gap-4">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="xl:col-span-3 rounded-2xl border border-[#F56B1F]/20 bg-[linear-gradient(120deg,#fff_10%,#fff3eb_45%,#fff_90%)] p-5">
-          <h2 className="text-2xl font-semibold text-[#1A1A2E]">Good morning, {user.name}</h2>
-          <p className="text-sm text-zinc-600 mt-1">Here&apos;s your attendance overview for this week with live performance signals.</p>
-        </motion.div>
-        <AiGuidanceCard text="You are tracking strong consistency this week with healthy attendance patterns." />
-      </div>
+      <GreetingHeroCard name={user.name} />
+
+      <AiGuidanceCard text="You are tracking strong consistency this week with healthy attendance patterns." />
 
       <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
         <KpiCard title="Present Today" value={kpis.present} icon={<UserCheck size={24} />} />

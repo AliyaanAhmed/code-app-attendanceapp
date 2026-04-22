@@ -137,6 +137,7 @@ const projectsByCategory: Record<TimesheetRow["category"], string[]> = {
 const attendanceRecords: AttendanceRecord[] = []
 const leaveRequests: LeaveRequest[] = []
 const timesheets: TimesheetWeek[] = []
+const timesheetMonthsCurrentYear = Array.from({ length: dayjs().month() + 1 }, (_, i) => dayjs().startOf("year").add(i, "month").format("YYYY-MM"))
 
 const monthStart = dayjs("2026-02-01")
 
@@ -146,6 +147,9 @@ employees.forEach((employee, empIndex) => {
     const end = start.endOf("month")
 
     for (let d = start; d.isBefore(end) || d.isSame(end, "day"); d = d.add(1, "day")) {
+      if (d.isSame(dayjs(), "day") || d.isAfter(dayjs(), "day")) {
+        continue
+      }
       if (d.day() === 0 || d.day() === 6) {
         continue
       }
@@ -266,6 +270,7 @@ export const mockData = {
   attendanceRecords,
   leaveRequests,
   timesheets,
+  timesheetMonthsCurrentYear,
   holidays2026,
   notifications,
   projectsByCategory,

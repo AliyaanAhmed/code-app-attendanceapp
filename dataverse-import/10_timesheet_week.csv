@@ -1,0 +1,4 @@
+Timesheet Week Key,Employee Code,Year,Month,Week Label,Week Start Date,Week End Date,Status,Submitted On,Approver Employee Code,Review Note
+TS-DNX1005-2026-04-W1,DNX-1005,2026,4,Week 1,2026-04-01,2026-04-05,Approved,2026-04-06,DNX-1002,
+TS-DNX1005-2026-04-W2,DNX-1005,2026,4,Week 2,2026-04-08,2026-04-12,Submitted,2026-04-13,DNX-1002,
+TS-DNX1005-2026-04-W3,DNX-1005,2026,4,Week 3,2026-04-15,2026-04-19,Draft,,,

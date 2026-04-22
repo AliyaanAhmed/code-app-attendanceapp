@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "appId": "a152f78d-7ed2-4e7d-9dc6-1a5e3d6be47c",
+  "appDisplayName": "Datanox Attendance App",
+  "region": "prod",
+  "environmentId": "116d490e-4dcc-ed73-95a8-b1d7633687c4",
+  "description": "Attendance management frontend",
+  "buildPath": "dist",
+  "buildEntryPoint": "index.html",
+  "localAppUrl": "http://localhost:5173",
+  "logoPath": "Default",
+  "connectionReferences": {},
+  "databaseReferences": {
+    "default.cds": {
+      "dataSources": {
+        "dnx_employees": {
+          "entitySetName": "dnx_employees",
+          "logicalName": "dnx_employee",
+          "isHidden": false
+        },
+        "dnx_attendances": {
+          "entitySetName": "dnx_dnx_attendances",
+          "logicalName": "dnx_dnx_attendance",
+          "isHidden": false
+        },
+        "dnx_leave_requests": {
+          "entitySetName": "dnx_leave_requests",
+          "logicalName": "dnx_leave_request",
+          "isHidden": false
+        },
+        "dnx_leave_balances": {
+          "entitySetName": "dnx_leave_balances",
+          "logicalName": "dnx_leave_balance",
+          "isHidden": false
+        },
+        "dnx_timesheet_weeks": {
+          "entitySetName": "dnx_timesheet_weeks",
+          "logicalName": "dnx_timesheet_week",
+          "isHidden": false
+        },
+        "dnx_timesheet_entries": {
+          "entitySetName": "dnx_timesheet_entries",
+          "logicalName": "dnx_timesheet_entry",
+          "isHidden": false
+        },
+        "dnx_teams": {
+          "entitySetName": "dnx_dnx_teams",
+          "logicalName": "dnx_dnx_team",
+          "isHidden": false
+        },
+        "dnxofficelocations": {
+          "entitySetName": "dnx_dnxofficelocations",
+          "logicalName": "dnx_dnxofficelocation",
+          "isHidden": false
+        },
+        "dnx_projects": {
+          "entitySetName": "dnx_dnx_projects",
+          "logicalName": "dnx_dnx_project",
+          "isHidden": false
+        },
+        "dnx_holidaies": {
+          "entitySetName": "dnx_dnx_holidaies",
+          "logicalName": "dnx_dnx_holiday",
+          "isHidden": false
+        },
+        "dnx_notifications": {
+          "entitySetName": "dnx_notifications",
+          "logicalName": "dnx_notification",
+          "isHidden": false
+        }
+      },
+      "environmentVariableName": ""
+    }
+  }
+}

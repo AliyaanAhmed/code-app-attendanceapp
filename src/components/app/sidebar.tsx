@@ -10,8 +10,6 @@ import {
   ShieldCheck,
   Users2,
   UserCircle2,
-  PanelLeftClose,
-  PanelLeftOpen,
   Sparkles,
 } from "lucide-react"
 import { motion } from "framer-motion"
@@ -47,11 +45,21 @@ export function Sidebar() {
 
   return (
     <aside className={cn("relative border-r border-zinc-200 bg-white transition-all duration-300", sidebarCollapsed ? "w-[86px]" : "w-[265px]")}>
-      <div className="h-16 border-b border-zinc-200 px-4 flex items-center justify-between">
-        <BrandLogo showText={!sidebarCollapsed} imageClassName="rounded-lg" />
-        <button onClick={toggleSidebar} className="text-zinc-500 hover:text-zinc-900">
-          {sidebarCollapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
-        </button>
+      <div className="h-16 border-b border-zinc-200 px-5 flex items-center">
+        {sidebarCollapsed ? (
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-label="Open sidebar"
+            className="grid h-9 w-9 place-items-center rounded-full bg-[#F56B1F] text-sm font-bold text-white shadow-[0_8px_20px_rgba(245,107,31,0.28)]"
+          >
+            D
+          </button>
+        ) : (
+          <button type="button" onClick={toggleSidebar} aria-label="Collapse sidebar" className="cursor-pointer">
+            <BrandLogo imageClassName="h-8 w-auto rounded-lg" />
+          </button>
+        )}
       </div>
 
       {!sidebarCollapsed && (

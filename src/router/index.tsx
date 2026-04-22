@@ -1,18 +1,23 @@
+import { Suspense, lazy, type ReactNode } from "react"
 import { createBrowserRouter } from "react-router-dom"
 import { AuthLayout } from "@/layouts/auth-layout"
 import { AppLayout } from "@/layouts/app-layout"
 import { ProtectedRoute, RoleGuard } from "@/router/guards"
-import LoginPage from "@/pages/auth/login"
-import DashboardPage from "@/pages/dashboard/dashboard"
-import AttendanceCheckInPage from "@/pages/attendance/checkin"
-import AttendanceListPage from "@/pages/attendance/list"
-import LeaveRequestPage from "@/pages/leave/request"
-import TimesheetPage from "@/pages/timesheet/timesheet"
-import CalendarPage from "@/pages/calendar/calendar"
-import TeamPage from "@/pages/team/team"
-import ApprovalsPage from "@/pages/approvals/approvals"
-import ProfilePage from "@/pages/profile/profile"
-import NotFoundPage from "@/pages/not-found"
+import { RouteLoader } from "@/components/app/route-loader"
+
+const LoginPage = lazy(() => import("@/pages/auth/login"))
+const DashboardPage = lazy(() => import("@/pages/dashboard/dashboard"))
+const AttendanceCheckInPage = lazy(() => import("@/pages/attendance/checkin"))
+const AttendanceListPage = lazy(() => import("@/pages/attendance/list"))
+const LeaveRequestPage = lazy(() => import("@/pages/leave/request"))
+const TimesheetPage = lazy(() => import("@/pages/timesheet/timesheet"))
+const CalendarPage = lazy(() => import("@/pages/calendar/calendar"))
+const TeamPage = lazy(() => import("@/pages/team/team"))
+const ApprovalsPage = lazy(() => import("@/pages/approvals/approvals"))
+const ProfilePage = lazy(() => import("@/pages/profile/profile"))
+const NotFoundPage = lazy(() => import("@/pages/not-found"))
+
+const withLoader = (node: ReactNode) => <Suspense fallback={<RouteLoader />}>{node}</Suspense>
 
 const BASENAME = new URL(".", location.href).pathname
 if (location.pathname.endsWith("/index.html")) {
@@ -24,8 +29,8 @@ export const router = createBrowserRouter(
     {
       path: "/",
       element: <AuthLayout />,
-      errorElement: <NotFoundPage />,
-      children: [{ index: true, element: <LoginPage /> }],
+      errorElement: withLoader(<NotFoundPage />),
+      children: [{ index: true, element: withLoader(<LoginPage />) }],
     },
     {
       element: <ProtectedRoute />,
@@ -33,18 +38,18 @@ export const router = createBrowserRouter(
         {
           element: <AppLayout />,
           children: [
-            { path: "/dashboard", element: <DashboardPage /> },
-            { path: "/attendance/checkin", element: <AttendanceCheckInPage /> },
-            { path: "/attendance/list", element: <AttendanceListPage /> },
-            { path: "/leave/request", element: <LeaveRequestPage /> },
-            { path: "/timesheet", element: <TimesheetPage /> },
-            { path: "/calendar", element: <CalendarPage /> },
-            { path: "/profile", element: <ProfilePage /> },
+            { path: "/dashboard", element: withLoader(<DashboardPage />) },
+            { path: "/attendance/checkin", element: withLoader(<AttendanceCheckInPage />) },
+            { path: "/attendance/list", element: withLoader(<AttendanceListPage />) },
+            { path: "/leave/request", element: withLoader(<LeaveRequestPage />) },
+            { path: "/timesheet", element: withLoader(<TimesheetPage />) },
+            { path: "/calendar", element: withLoader(<CalendarPage />) },
+            { path: "/profile", element: withLoader(<ProfilePage />) },
             {
               element: <RoleGuard allowedRoles={["Director", "Lead"]} />,
               children: [
-                { path: "/team", element: <TeamPage /> },
-                { path: "/approvals", element: <ApprovalsPage /> },
+                { path: "/team", element: withLoader(<TeamPage />) },
+                { path: "/approvals", element: withLoader(<ApprovalsPage />) },
               ],
             },
           ],

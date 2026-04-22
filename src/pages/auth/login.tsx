@@ -59,6 +59,7 @@ export default function LoginPage() {
                 <Mail className="absolute left-3 top-2.5 text-zinc-400" size={16} />
                 <Input
                   value={form.email}
+                  autoComplete="email"
                   onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
                   className="pl-9 focus-visible:ring-[#F56B1F]"
                 />
@@ -71,6 +72,7 @@ export default function LoginPage() {
                 <Input
                   type="password"
                   value={form.password}
+                  autoComplete="current-password"
                   onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
                   className="pl-9 focus-visible:ring-[#F56B1F]"
                 />

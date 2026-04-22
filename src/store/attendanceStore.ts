@@ -6,8 +6,8 @@ type AttendanceState = {
   records: AttendanceRecord[]
   liveCheckIn: string | null
   liveCheckOut: string | null
-  checkInAt: (employeeId: string, locationLabel?: string) => void
-  checkOutAt: (employeeId: string) => void
+  checkInAt: (employeeId: string, locationLabel?: string) => Promise<AttendanceRecord>
+  checkOutAt: (employeeId: string) => Promise<AttendanceRecord | undefined>
   getEmployeeRecords: (employeeId: string) => AttendanceRecord[]
   getTodayRecord: (employeeId: string) => AttendanceRecord | undefined
 }
@@ -16,24 +16,24 @@ export const useAttendanceStore = create<AttendanceState>((set, get) => ({
   records: mockData.attendanceRecords,
   liveCheckIn: null,
   liveCheckOut: null,
-  checkInAt: (employeeId: string, locationLabel = "Karachi, PK - Office") => {
+  checkInAt: async (employeeId: string, locationLabel = "Karachi, PK - Office") => {
+    await new Promise((resolve) => setTimeout(resolve, 650))
     const now = dayjs()
     const date = now.format("YYYY-MM-DD")
     const time = now.format("HH:mm")
     const current = get().records.find((r) => r.employeeId === employeeId && r.date === date)
     const status: AttendanceStatus = now.hour() >= 9 && now.minute() > 0 ? "Late" : "Present"
 
+    let resultRecord: AttendanceRecord
+
     if (current) {
-      const updated = get().records.map((r) =>
-        r.id === current.id
-          ? { ...r, checkIn: time, status, location: locationLabel }
-          : r
-      )
+      resultRecord = { ...current, checkIn: time, status, location: locationLabel }
+      const updated = get().records.map((r) => (r.id === current.id ? resultRecord : r))
       set({ records: updated, liveCheckIn: time, liveCheckOut: null })
-      return
+      return resultRecord
     }
 
-    const newRecord: AttendanceRecord = {
+    resultRecord = {
       id: `${employeeId}-${now.format("YYYYMMDD")}`,
       employeeId,
       date,
@@ -44,28 +44,28 @@ export const useAttendanceStore = create<AttendanceState>((set, get) => ({
       status,
     }
 
-    set((state) => ({ records: [newRecord, ...state.records], liveCheckIn: time, liveCheckOut: null }))
+    set((state) => ({ records: [resultRecord, ...state.records], liveCheckIn: time, liveCheckOut: null }))
+    return resultRecord
   },
-  checkOutAt: (employeeId: string) => {
+  checkOutAt: async (employeeId: string) => {
+    await new Promise((resolve) => setTimeout(resolve, 550))
     const now = dayjs()
     const date = now.format("YYYY-MM-DD")
     const time = now.format("HH:mm")
+
+    let updatedRecord: AttendanceRecord | undefined
 
     const updated = get().records.map((record) => {
       if (record.employeeId !== employeeId || record.date !== date) {
         return record
       }
-      const diff = record.checkIn
-        ? dayjs(`${date} ${time}`).diff(dayjs(`${date} ${record.checkIn}`), "minute") / 60
-        : 0
-      return {
-        ...record,
-        checkOut: time,
-        durationHours: Math.max(diff, 0),
-      }
+      const diff = record.checkIn ? dayjs(`${date} ${time}`).diff(dayjs(`${date} ${record.checkIn}`), "minute") / 60 : 0
+      updatedRecord = { ...record, checkOut: time, durationHours: Math.max(diff, 0) }
+      return updatedRecord
     })
 
     set({ records: updated, liveCheckOut: time })
+    return updatedRecord
   },
   getEmployeeRecords: (employeeId: string) => get().records.filter((record) => record.employeeId === employeeId),
   getTodayRecord: (employeeId: string) => {

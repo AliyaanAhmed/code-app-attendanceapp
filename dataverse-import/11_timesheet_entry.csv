@@ -1,0 +1,5 @@
+Timesheet Week Key,Category,Project Name,Task,Task Type,Mon,Tue,Wed,Thu,Fri
+TS-DNX1005-2026-04-W1,Development,Datanox Portal,Feature implementation and PR reviews,Billable,7,8,8,8,7
+TS-DNX1005-2026-04-W1,Management,Sprint Planning,Standups and sprint planning,Internal,1,0,0,0,1
+TS-DNX1005-2026-04-W2,Development,Power Apps Integration,Timesheet module enhancements,Billable,8,8,6,7,8
+TS-DNX1005-2026-04-W3,Development,HR Analytics API,API contract review and testing,Billable,4,5,0,0,0

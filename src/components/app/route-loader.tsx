@@ -26,8 +26,6 @@ export function RouteLoader() {
           <BrandLogo imageClassName="h-12 w-12 rounded-xl" showText={false} />
         </div>
 
-        <BrandLogo textClassName="text-xl tracking-tight" />
-
         <div className="flex items-center gap-2 text-xs text-zinc-500">
           <Sparkles size={13} className="text-[#F56B1F]" />
           Preparing your attendance workspace

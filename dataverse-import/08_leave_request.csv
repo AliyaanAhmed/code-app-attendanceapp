@@ -1,0 +1,4 @@
+Employee Code,Leave Type,From Date,To Date,Reason,Days,Status,Approver Employee Code,Decision Date,Rejection Reason
+DNX-1005,Casual Leave,2026-04-22,2026-04-22,Personal commitment,1,Approved,DNX-1002,2026-04-20,
+DNX-1008,Sick Leave,2026-04-18,2026-04-19,Fever and rest,2,Pending,,,
+DNX-1011,Annual Leave,2026-04-25,2026-04-27,Family travel,3,Rejected,DNX-1004,2026-04-19,Insufficient team backup
